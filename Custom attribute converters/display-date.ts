@@ -1,31 +1,11 @@
-import {LitElement, html, PropertyValues} from 'lit';
+import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import type {ComplexAttributeConverter} from 'lit';
-
-export const dateConverter = (locale: string): ComplexAttributeConverter<Date> => {
-  return {
-    toAttribute: (date: Date) => {
-      return date.toLocaleDateString(locale);
-    },
-    fromAttribute: (value: string) => {
-      return new Date(value);
-    }
-  }
-};
+import {dateConverter} from './date-converter.js';
 
 @customElement('date-display')
 export class DateDisplay extends LitElement {
-  @property({attribute: false})
+  @property({converter: dateConverter(navigator.language), reflect: true})
   date = new Date();
-
-  @property({type: String, attribute: 'date-str'})
-  dateStr = '';
-
-  willUpdate(changed: PropertyValues<this>) {
-    if (changed.has('dateStr') && this.dateStr) {
-      this.date = new Date(this.dateStr);
-    }
-  }
 
   render() {
     const locale = 'en-US';
